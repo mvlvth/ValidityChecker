@@ -10,26 +10,30 @@ public class ValidityChecker {
         Scanner scan = new Scanner(System.in);
         System.out.println("Write your personnr YYYYMMDDXXXX");
         String line = scan.nextLine();
-        if (isDate(line.substring(0, 8))) {
-            char[] charArray = line.toCharArray();
-            int[] persNo = new int[charArray.length];
-            try {
-                for (int i = 0; i < charArray.length; i++) {
-                    persNo[i] = Integer.parseInt(String.valueOf(charArray[i]));
+        try {
+            if (isDate(line.substring(0, 8))) {
+                char[] charArray = line.toCharArray();
+                int[] persNo = new int[charArray.length];
+                try {
+                    for (int i = 0; i < charArray.length; i++) {
+                        persNo[i] = Integer.parseInt(String.valueOf(charArray[i]));
+
+                    }
+                    if (line.length() == 12 && isValidPersNo(persNo)) {
+                        System.out.println("Valid personal number!");
+                    } else {
+                        System.out.println("NOT a valid personal number!");
+
+                    }
+                } catch (Exception e) {
+                    System.out.println("NOT a valid personal number! " + e);
 
                 }
-                if (line.length() == 12 && isValidPersNo(persNo)) {
-                    System.out.println("Valid personal number!");
-                } else {
-                    System.out.println("NOT a valid personal number!");
-
-                }
-            } catch (Exception e) {
-                System.out.println("NOT a valid personal number!");
-
+            } else {
+                System.out.println("Not a valid date");
             }
-        } else {
-            System.out.println("Not a valid date");
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         /*
@@ -100,6 +104,7 @@ public class ValidityChecker {
                 return true;
             }
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
 
