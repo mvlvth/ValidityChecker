@@ -3,13 +3,52 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import java.io.IOException;
+
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.SimpleFormatter;
 
 public class ValidityChecker {
+    static Handler fileHandler = null;
+    private static Logger LOGGER = Logger.getLogger(ValidityChecker.class.getName());
 
     public static void main(String[] args) {
+        // setup for the logfile
+        setup();
         Scanner scan = new Scanner(System.in);
-        System.out.println("Write your personnr YYYYMMDDXXXX");
-        String line = scan.nextLine();
+        while (true) {
+            System.out.println("***********************************************************************");
+            System.out.println("Enter your social security number (YYYYMMDDXXXX), press CTRL+C to exit:");
+            String line = scan.nextLine();
+            // Logging invalid SSN:s
+            if (!validityCheckerPersNo(line)) {
+                LOGGER.log(Level.INFO, line);
+            }
+        }
+
+    }
+
+    public static void setup() {
+
+        try {
+            fileHandler = new FileHandler("./logfileSSN.log");// file
+            SimpleFormatter simple = new SimpleFormatter();
+            fileHandler.setFormatter(simple);
+
+            LOGGER.addHandler(fileHandler);// adding Handler for file
+
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+    }
+
+    public static boolean validityCheckerPersNo(String line) {
+
         try {
             if (isDate(line.substring(0, 8))) {
                 char[] charArray = line.toCharArray();
@@ -20,29 +59,26 @@ public class ValidityChecker {
 
                     }
                     if (line.length() == 12 && isValidPersNo(persNo)) {
-                        System.out.println("Valid personal number!");
+                        System.out.println("Valid social security number!");
+                        return true;
                     } else {
-                        System.out.println("NOT a valid personal number!");
+                        System.out.println("NOT a valid social security number!");
+                        return false;
 
                     }
                 } catch (Exception e) {
-                    System.out.println("NOT a valid personal number! " + e);
+                    System.out.println("NOT a valid social security number! " + e);
+                    return false;
 
                 }
             } else {
                 System.out.println("Not a valid date");
+                return false;
             }
         } catch (Exception e) {
             System.out.println(e);
+            return false;
         }
-
-        /*
-         * String dob = "19911215"; if (isDate(dob)) { System.out.println("Date!");
-         * System.out.println(dob);
-         * 
-         * } else { System.out.println("nope"); }
-         */
-
     }
 
     public static boolean isValidPersNo(int[] persNo) {
