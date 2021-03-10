@@ -1,8 +1,7 @@
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.Scanner;
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ValidityChecker {
 
@@ -10,7 +9,7 @@ public class ValidityChecker {
         Scanner scan = new Scanner(System.in);
         System.out.println("Write your personnr YYYYMMDDXXXX");
         String line = scan.nextLine();
-        if (isDate(line.substring(0, 7))) {
+        if (isDate(line.substring(0, 8))) {
             char[] charArray = line.toCharArray();
             int[] persNo = new int[charArray.length];
             for (int i = 0; i < charArray.length; i++) {
@@ -19,7 +18,7 @@ public class ValidityChecker {
                 System.out.println(persNo[i]);
 
             }
-            if (isValidPersNo(persNo)) {
+            if (line.length() == 12 && isValidPersNo(persNo)) {
                 System.out.println("Valid personal number!");
             } else {
                 System.out.println("NOT a valid personal number!");
@@ -91,26 +90,18 @@ public class ValidityChecker {
     }
 
     public static boolean isDate(String DOB) {
-        DateFormat df = new SimpleDateFormat("yyyyMMdd");
-        Date BOD = null;
 
-        // doesnt allow other formats than the specified yyyymmdd
-        df.setLenient(false);
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate dobDateFormat = LocalDate.parse(DOB, dateFormat);
+        LocalDate startDate = LocalDate.parse("19000101", dateFormat);
+        LocalDate endDate = LocalDate.now();
 
-        try {
-            Date min = df.parse("19000101");
-            Date max = df.parse("20210312");
-            BOD = df.parse(DOB);
-            if (BOD.compareTo(min) > 0 && BOD.compareTo(max) <= 0) {
-
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
+        if (dobDateFormat.isBefore(startDate) || dobDateFormat.isAfter(endDate)) {
             return false;
-
+        } else {
+            return true;
         }
+
     }
 
     /*
