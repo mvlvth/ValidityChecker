@@ -13,14 +13,18 @@ public class ValidityChecker {
         if (isDate(line.substring(0, 8))) {
             char[] charArray = line.toCharArray();
             int[] persNo = new int[charArray.length];
-            for (int i = 0; i < charArray.length; i++) {
+            try {
+                for (int i = 0; i < charArray.length; i++) {
+                    persNo[i] = Integer.parseInt(String.valueOf(charArray[i]));
 
-                persNo[i] = Integer.parseInt(String.valueOf(charArray[i]));
+                }
+                if (line.length() == 12 && isValidPersNo(persNo)) {
+                    System.out.println("Valid personal number!");
+                } else {
+                    System.out.println("NOT a valid personal number!");
 
-            }
-            if (line.length() == 12 && isValidPersNo(persNo)) {
-                System.out.println("Valid personal number!");
-            } else {
+                }
+            } catch (Exception e) {
                 System.out.println("NOT a valid personal number!");
 
             }
@@ -104,7 +108,7 @@ public class ValidityChecker {
     /*
      * // ha dessa i en parent class som ärvs nedåt i checkpersonnr och check
      * bilreg? // Göra tester? // Logga i separat fil och system out print public
-     * static boolean isNull(String DOB) {
+     * loggning i parent också? static boolean isNull(String DOB) {
      * 
      * }
      * 
