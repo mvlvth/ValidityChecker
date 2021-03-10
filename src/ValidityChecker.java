@@ -2,6 +2,7 @@
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 
 public class ValidityChecker {
 
@@ -15,7 +16,6 @@ public class ValidityChecker {
             for (int i = 0; i < charArray.length; i++) {
 
                 persNo[i] = Integer.parseInt(String.valueOf(charArray[i]));
-                System.out.println(persNo[i]);
 
             }
             if (line.length() == 12 && isValidPersNo(persNo)) {
@@ -45,42 +45,32 @@ public class ValidityChecker {
         int checkSum = 0;
 
         for (int i = 2; i < persNo.length - 1; i++) {
-            /*
-             * if(i%2 == 0){ tempNo = persNo[i]*2; } else{ tempNo = persNo[i]*1; }
-             */
-            System.out.println("TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT: " + i);
 
+            // Multiplying every other digit with 2 and 1
             tempNo = (i % 2 == 0) ? persNo[i] * 2 : persNo[i] * 1;
 
             char[] charArr = String.valueOf(tempNo).toCharArray();
             if (charArr.length > 1) {
-                // int[] twoDigits = new int[charArray.length];
                 for (int j = 0; j < charArr.length; j++) {
-                    System.out.println("TEST 1: " + sumOfANumber);
-
-                    // twoDigits[j] = Integer.parseInt(String.valueOf(charArray[j]));
+                    // Adding the two digits that make up the number after converting it to an
+                    // integer
                     sumOfANumber += Integer.parseInt(String.valueOf(charArr[j]));
-                    System.out.println("TEST: " + sumOfANumber);
-                    // System.out.println(sumOfANumber);
                 }
                 sumOfPersNo += sumOfANumber;
 
-                System.out.println("IF");
-                // reset
+                // Reset
                 sumOfANumber = 0;
 
             } else {
                 sumOfPersNo += tempNo;
-                // System.out.println("summan av enstaka siffror: " + sumOfPersNo);
-                System.out.println("ELSE");
             }
-            System.out.println("VARJE SIFFERSTEG: " + sumOfPersNo);
+            // System.out.println("VARJE SIFFERSTEG: " + sumOfPersNo);
 
         }
 
         checkSum = (10 - (sumOfPersNo % 10)) % 10;
-        System.out.println("checkDigit: " + checkDigit);
-        System.out.println("checkSum: " + checkSum);
+        // System.out.println("checkDigit: " + checkDigit);
+        // System.out.println("checkSum: " + checkSum);
         if (checkSum == checkDigit) {
             return true;
         } else {
@@ -91,15 +81,22 @@ public class ValidityChecker {
 
     public static boolean isDate(String DOB) {
 
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate dobDateFormat = LocalDate.parse(DOB, dateFormat);
-        LocalDate startDate = LocalDate.parse("19000101", dateFormat);
-        LocalDate endDate = LocalDate.now();
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("uuuuMMdd");
 
-        if (dobDateFormat.isBefore(startDate) || dobDateFormat.isAfter(endDate)) {
+        try {
+            // surround with try catch ifall ej giltigt datum
+            // Revolverstyle strict to handle varying month lengths of february, leap year
+            LocalDate dobDateFormat = LocalDate.parse(DOB, dateFormat.withResolverStyle(ResolverStyle.STRICT));
+            LocalDate startDate = LocalDate.parse("19000101", dateFormat);
+            LocalDate endDate = LocalDate.now();
+
+            if (dobDateFormat.isBefore(startDate) || dobDateFormat.isAfter(endDate)) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
             return false;
-        } else {
-            return true;
         }
 
     }
