@@ -12,7 +12,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.SimpleFormatter;
 
-public class ValidityChecker {
+public class ValidityCheckerSSN {
     static Handler fileHandler = null;
     private static Logger LOGGER = Logger.getLogger(ValidityChecker.class.getName());
 
