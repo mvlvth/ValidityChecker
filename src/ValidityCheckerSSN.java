@@ -12,40 +12,49 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.SimpleFormatter;
 
-public class ValidityCheckerSSN {
-    static Handler fileHandler = null;
-    private static Logger LOGGER = Logger.getLogger(ValidityChecker.class.getName());
+public class ValidityCheckerSSN extends ValidityChecker {
+    // static Handler fileHandler = null;
+    // private static Logger LOGGER =
+    // Logger.getLogger(ValidityChecker.class.getName());
 
     public static void main(String[] args) {
         // setup for the logfile
-        setup();
-        Scanner scan = new Scanner(System.in);
+        setup("SSN");
+        // Scanner scan = new Scanner(System.in);
         while (true) {
             System.out.println("***********************************************************************");
             System.out.println("Enter your social security number (YYYYMMDDXXXX), press CTRL+C to exit:");
             String line = scan.nextLine();
-            // Logging invalid SSN:s
-            if (!validityCheckerPersNo(line)) {
-                LOGGER.log(Level.INFO, line);
+            if (!noInput(line)) {
+                // Logging invalid SSN:s
+                if (!validityCheckerPersNo(line)) {
+                    // System.out.println("-----------------------------------------------------------------------");
+                    // System.out.println();
+                    // System.out.println("LOG:");
+                    // LOGGER.log(Level.INFO, line);
+                    // System.out.println();
+                    printErrorLog(line);
+
+                }
+            } else {
+                System.out.println("Empty field! Please enter a social security number");
             }
         }
 
     }
-
-    public static void setup() {
-
-        try {
-            fileHandler = new FileHandler("./logfileSSN.log");// file
-            SimpleFormatter simple = new SimpleFormatter();
-            fileHandler.setFormatter(simple);
-
-            LOGGER.addHandler(fileHandler);// adding Handler for file
-
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-
-    }
+    /*
+     * public static void setup() {
+     * 
+     * try { fileHandler = new FileHandler("./logfileSSN.log");// file
+     * SimpleFormatter simple = new SimpleFormatter();
+     * fileHandler.setFormatter(simple);
+     * 
+     * LOGGER.addHandler(fileHandler);// adding Handler for file
+     * 
+     * } catch (IOException e) { System.out.println(e); }
+     * 
+     * }
+     */
 
     public static boolean validityCheckerPersNo(String line) {
 
@@ -146,19 +155,4 @@ public class ValidityCheckerSSN {
 
     }
 
-    /*
-     * // ha dessa i en parent class som ärvs nedåt i checkpersonnr och check
-     * bilreg? // Göra tester? // Logga i separat fil och system out print public
-     * loggning i parent också? static boolean isNull(String DOB) {
-     * 
-     * }
-     * 
-     * public static boolean isEmpty(String DOB) {
-     * 
-     * }
-     * 
-     * public static boolean isBlank(String DOB) {
-     * 
-     * }
-     */
 }
