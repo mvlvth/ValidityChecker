@@ -1,38 +1,20 @@
 
-import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import java.io.IOException;
-
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.SimpleFormatter;
 
 public class ValidityCheckerSSN extends ValidityChecker {
-    // static Handler fileHandler = null;
-    // private static Logger LOGGER =
-    // Logger.getLogger(ValidityChecker.class.getName());
 
     public static void main(String[] args) {
         // setup for the logfile
         setup("SSN");
-        // Scanner scan = new Scanner(System.in);
         while (true) {
-            System.out.println("***********************************************************************");
-            System.out.println("Enter your social security number (YYYYMMDDXXXX), press CTRL+C to exit:");
+            System.out.println("***************************************************************************");
+            System.out.println("Enter your social security number (YYYYMMDDXXXX) (or press CTRL+C to exit):");
             String line = scan.nextLine();
             if (!noInput(line)) {
                 // Logging invalid SSN:s
                 if (!validityCheckerPersNo(line)) {
-                    // System.out.println("-----------------------------------------------------------------------");
-                    // System.out.println();
-                    // System.out.println("LOG:");
-                    // LOGGER.log(Level.INFO, line);
-                    // System.out.println();
                     printErrorLog(line);
 
                 }
@@ -42,19 +24,6 @@ public class ValidityCheckerSSN extends ValidityChecker {
         }
 
     }
-    /*
-     * public static void setup() {
-     * 
-     * try { fileHandler = new FileHandler("./logfileSSN.log");// file
-     * SimpleFormatter simple = new SimpleFormatter();
-     * fileHandler.setFormatter(simple);
-     * 
-     * LOGGER.addHandler(fileHandler);// adding Handler for file
-     * 
-     * } catch (IOException e) { System.out.println(e); }
-     * 
-     * }
-     */
 
     public static boolean validityCheckerPersNo(String line) {
 
@@ -68,7 +37,7 @@ public class ValidityCheckerSSN extends ValidityChecker {
 
                     }
                     if (line.length() == 12 && isValidPersNo(persNo)) {
-                        System.out.println("Valid social security number!");
+                        System.out.println("Success! Valid social security number!");
                         return true;
                     } else {
                         System.out.println("NOT a valid social security number!");
@@ -76,16 +45,16 @@ public class ValidityCheckerSSN extends ValidityChecker {
 
                     }
                 } catch (Exception e) {
-                    System.out.println("NOT a valid social security number! " + e);
+                    System.out.println("NOT a valid social security number: " + e);
                     return false;
 
                 }
             } else {
-                System.out.println("Not a valid date");
+                // Not a valid date/valid format
                 return false;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Wrong format: " + e);
             return false;
         }
     }
@@ -103,10 +72,11 @@ public class ValidityCheckerSSN extends ValidityChecker {
             tempNo = (i % 2 == 0) ? persNo[i] * 2 : persNo[i] * 1;
 
             char[] charArr = String.valueOf(tempNo).toCharArray();
+            // if a number is > 9 its two digits are added with each other)
             if (charArr.length > 1) {
                 for (int j = 0; j < charArr.length; j++) {
-                    // Adding the two digits that make up the number after converting it to an
-                    // integer
+                    // Adding the two digits that make up the number (which is >9) after converting
+                    // it to an integer
                     sumOfANumber += Integer.parseInt(String.valueOf(charArr[j]));
                 }
                 sumOfPersNo += sumOfANumber;
@@ -117,14 +87,12 @@ public class ValidityCheckerSSN extends ValidityChecker {
             } else {
                 sumOfPersNo += tempNo;
             }
-            // System.out.println("VARJE SIFFERSTEG: " + sumOfPersNo);
 
         }
 
         checkSum = (10 - (sumOfPersNo % 10)) % 10;
-        // System.out.println("checkDigit: " + checkDigit);
-        // System.out.println("checkSum: " + checkSum);
         if (checkSum == checkDigit) {
+            // valid SSN
             return true;
         } else {
             return false;
@@ -137,19 +105,21 @@ public class ValidityCheckerSSN extends ValidityChecker {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("uuuuMMdd");
 
         try {
-            // surround with try catch ifall ej giltigt datum
             // Revolverstyle strict to handle varying month lengths of february, leap year
             LocalDate dobDateFormat = LocalDate.parse(DOB, dateFormat.withResolverStyle(ResolverStyle.STRICT));
+            // assuming the oldest person alive was born 1900
             LocalDate startDate = LocalDate.parse("19000101", dateFormat);
+            // assuming SSN:s are not created/assigned before people are born
             LocalDate endDate = LocalDate.now();
 
+            // checking the set date range
             if (dobDateFormat.isBefore(startDate) || dobDateFormat.isAfter(endDate)) {
                 return false;
             } else {
                 return true;
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Not a valid date: " + e);
             return false;
         }
 

@@ -38,9 +38,10 @@ public class ValidityChecker {
     public static void printErrorLog(String line) {
         System.out.println("---------------------------------------------------------------");
         System.out.println();
-        System.out.println("LOG:");
+        System.out.println("LOG (also logged to file):");
         LOGGER.log(Level.INFO, line);
         System.out.println();
+        System.out.println("---------------------------------------------------------------");
 
     }
 
