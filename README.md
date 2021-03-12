@@ -21,4 +21,4 @@ This opens up a menu from which it is possible to navigate to the different vali
 - ValidityCheckerCar.java - The class for validating Swedish car registration numbers. The class extends ValidityChecker to invoke its methods.
 - Main.java - A Main file to connect the two programs and enable navigation.
 
-When either one of the programs run a log file is created in the src folder, where invalid user data is saved. The invalid data is also printed in the console.
+When either one of the programs run, a log file is created in the src folder, where invalid user data is saved. The invalid data is also printed in the console.
